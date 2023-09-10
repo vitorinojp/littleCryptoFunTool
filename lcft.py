@@ -1,7 +1,10 @@
+import os
 import sys
 from utils.argparse_util import create_parser, print_usage
+from utils.password_utils import generate_password
 from modules.nacl.nacl_util import encrypt_message_with_password, decrypt_message_with_password
 from modules.fernet.fernet_util import encrypt_message_with_password, decrypt_message_with_password
+
 
 def main():
     if len(sys.argv) < 2:
@@ -17,13 +20,18 @@ def main():
     password = args.password
     message = args.message
 
-    # if the file is not found, create it
+    if not file:
+        file = "output/secret." + module
     try:
         f = open(file)
         f.close()
     except FileNotFoundError:
-        f = open(file, "w")
-        f.close()
+        open(file, 'a').close()
+
+    # if the password is not set, randomly generate one
+    if not password:
+        password = generate_password()
+        print(f"Generated password: {password}")
 
     if module == "nacl":
         if action == "enc":
@@ -33,7 +41,7 @@ def main():
             decrypted_message = decrypt_message_with_password(file, password)
             if decrypted_message:
                 print(f"Decrypted message: {decrypted_message}")
-    if module == "fernet":
+    elif module == "fernet":
         if action == "enc":
             encrypt_message_with_password(message, password, file)
             print(f"Message encrypted and saved to {file}")
@@ -41,7 +49,6 @@ def main():
             decrypted_message = decrypt_message_with_password(file, password)
             if decrypted_message:
                 print(f"Decrypted message: {decrypted_message}")
-
     else:
         print(f"Invalid module: {module}. Supported modules: nacl, fernet")
 

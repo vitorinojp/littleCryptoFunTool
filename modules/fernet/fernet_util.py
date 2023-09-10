@@ -32,11 +32,15 @@ def encrypt_message_with_password(message, password, output_file):
         f.write(ciphertext)
 
 
-def decrypt_message_with_password(encrypted_message, password, salt):
+def decrypt_message_with_password(input_file, password):
+    with open(input_file, 'rb') as f:
+        salt = f.read(SALT_SIZE)
+        ciphertext = f.read()
+
     key = derive_key_from_password(password.encode(), salt)
     fernet_key = Fernet(key)
     try:
-        decrypted_message = fernet_key.decrypt(encrypted_message).decode()
+        decrypted_message = fernet_key.decrypt(ciphertext).decode()
         return decrypted_message
     except Exception as e:
         print("Decryption failed. Check your password.")

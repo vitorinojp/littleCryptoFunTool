@@ -3,10 +3,11 @@ import argparse
 
 def create_parser():
     parser = argparse.ArgumentParser(description="Encrypt and decrypt a message with a password")
-    parser.add_argument("module", choices=["nacl", "fernet"], help="Choose a cryptographic module (e.g., 'nacl', 'fernet')")
+    parser.add_argument("module", choices=["nacl", "fernet"], help="Choose a cryptographic module (e.g., 'nacl', "
+                                                                   "'fernet')")
     parser.add_argument("action", choices=["enc", "dec"], help="Choose 'enc -> encrypt' or 'dec -> decrypt' action")
-    parser.add_argument("-f", "--file", required=True, help="Input file for decryption, output file for encryption")
-    parser.add_argument("-p", "--password", required=True, help="Password for encryption or decryption")
+    parser.add_argument("-f", "--file", help="Input file for decryption, output file for encryption")
+    parser.add_argument("-p", "--password", help="Password for encryption or decryption")
     parser.add_argument("-m", "--message", help="Message to encrypt")
     return parser
 
